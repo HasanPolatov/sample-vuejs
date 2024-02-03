@@ -60,62 +60,92 @@ const select = (question, index, answerIndex) => {
 </script>
 
 <template>
-
   <div class="container">
     <div class="row">
-      <div class="d-flex align-items-star">
-        <div class="col-md-1">
-          <div class="nav nav-pills justify-content-center gap-2" id="v-pills-tab" role="tablist"
-               aria-orientation="vertical">
-            <button
-                v-for="(tab, index) in questions" :key="index"
-                class="btn rounded-circle"
-                :class="checkRequest.questions[index]?.question === tab.question ? 'active btn-primary border-3': 'btn-light border-primary border-3'"
-                @click="changeTab(index)">
-              {{ index + 1 }}
-            </button>
-          </div>
+      <div class="col-md-1">
+        <div class="tab-navigation">
+          <button
+              v-for="(tab, index) in questions"
+              :key="index"
+              class="tab-button"
+              :class="{ active: currentTab.index === index }"
+              @click="changeTab(index)"
+          >
+            {{ index + 1 }}
+          </button>
         </div>
-        <div class="col-md-9">
-          <div class="tab-content" id="v-pills-tabContent">
-            <div v-for="(question, index) in questions" :key="index">
-              <div v-if="currentTab.index === index">
-                <p>{{ question.question }}</p>
-                <form>
-
-                  <template v-for="(answer, testId) in question.answers" :key="answer">
-                    <div class="mb-3">
-                      <label
-                          :for="testId"
-                          class="form-control"
-                          :class="checkRequest.questions[index]?.answer === answer ? 'active border-primary': ''"
-                      >{{ answer }}</label>
-                      <input type="radio" hidden :name="index" @click="select(question, index, testId)" :id="testId">
-                    </div>
-                  </template>
-
-                  <!--            <pre>{{checkRequest}}</pre>-->
-
-                </form>
-              </div>
+      </div>
+      <div class="col-md-9">
+        <div class="tab-content" id="v-pills-tabContent">
+          <div v-for="(question, index) in questions" :key="index">
+            <div v-if="currentTab.index === index">
+              <p>{{ question.question }}</p>
+              <form>
+                <template v-for="(answer, testId) in question.answers" :key="answer">
+                  <div class="answer-container">
+                    <label
+                        :for="testId"
+                        class="answer-label"
+                        :class="{ active: checkRequest.questions[index]?.answer === answer }"
+                    >
+                      {{ answer }}
+                    </label>
+                    <input type="radio" hidden :name="index" @click="select(question, index, testId)" :id="testId">
+                  </div>
+                </template>
+              </form>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
 </template>
 
 <style scoped>
+.container {
+  margin: 20px;
+}
 
-#v-pills-tab {
-  max-height: 600px;
-  width: auto;
-  overflow-y: scroll;
-  scrollbar-width: none;
-  padding: 0 10px;
-  max-width: 60px;
+.tab-navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tab-button {
+  cursor: pointer;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  background-color: #fff;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.tab-button.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.tab-content {
+  margin-left: 20px;
+}
+
+.answer-container {
+  margin-bottom: 10px;
+}
+
+.answer-label {
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid #ccc;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.answer-label.active {
+  background-color: #007bff;
+  color: #fff;
 }
 
 </style>
+
